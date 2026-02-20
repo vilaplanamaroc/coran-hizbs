@@ -4,53 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>٦٠ حزب من القرآن الكريم</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Amiri', serif;
-            font-weight: 400;
-            color: #1a1a1a;               /* noir doux, très reposant pour les yeux */
+            color: #1a1a1a;               /* noir doux, très reposant */
             background: #ffffff;
             line-height: 2;
+            font-size: 22px;
             direction: rtl;
-            text-align: right;
             padding: 20px;
             max-width: 100%;
             overflow-x: hidden;
         }
         #progress {
-            margin-bottom: 25px;
             text-align: center;
-            font-size: 22px;
+            font-size: 24px;
+            margin-bottom: 30px;
             color: #1565c0;
         }
-        #content {
-            font-size: 24px;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background: #fffef7;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-        }
-        .surah-title {
-            font-size: 32px;
-            color: #0d47a1;
-            text-align: center;
-            margin: 30px 0 20px;
-            border-bottom: 2px solid #bbdefb;
-            padding-bottom: 10px;
-        }
-        select, button, input {
+        select, button {
             font-family: 'Amiri', serif;
-            font-size: 18px;
+            font-size: 20px;
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid #90caf9;
             width: 100%;
-            margin: 10px 0;
+            margin: 12px 0;
         }
+        select { border: 1px solid #90caf9; }
         button {
             background: #1565c0;
             color: white;
@@ -64,10 +46,28 @@
             background: #f9a825;
             color: #0d1b2a;
             font-weight: bold;
-            width: 100%;
             margin-top: 20px;
         }
-        #loading { text-align: center; margin: 20px; color: #757575; font-style: italic; }
+        #content {
+            background: #fffef7;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .surah-title {
+            font-size: 32px;
+            color: #0d47a1;
+            text-align: center;
+            margin: 30px 0 20px;
+            border-bottom: 2px solid #bbdefb;
+            padding-bottom: 10px;
+        }
+        #loading { 
+            text-align: center; 
+            margin: 30px 0; 
+            color: #757575; 
+            font-style: italic; 
+        }
     </style>
 </head>
 <body>
@@ -87,8 +87,12 @@
     <button class="reset" onclick="resetProgress()">إعادة تعيين التقدم</button>
 
     <script>
-        // Colle ici ton tableau hizbRanges complet (celui de la version qui marche)
-        const hizbRanges = [ /* ... ton tableau avec les 60 hizbs ... */ ];
+        // Remplace par TON tableau hizbRanges exact (celui de la version qui marchait)
+        const hizbRanges = [
+            {hizb:1, parts:[{surah:1,start:1,end:7},{surah:2,start:1,end:74}]},
+            // ... colle ici les 60 entrées de ton ancien code qui fonctionnait ...
+            {hizb:60, parts:[{surah:87,start:1,end:19},{surah:88,start:1,end:26},{surah:89,start:1,end:30},{surah:90,start:1,end:20},{surah:91,start:1,end:15},{surah:92,start:1,end:21},{surah:93,start:1,end:11},{surah:94,start:1,end:8},{surah:95,start:1,end:8},{surah:96,start:1,end:19},{surah:97,start:1,end:5},{surah:98,start:1,end:8},{surah:99,start:1,end:8},{surah:100,start:1,end:11},{surah:101,start:1,end:11},{surah:102,start:1,end:8},{surah:103,start:1,end:3},{surah:104,start:1,end:9},{surah:105,start:1,end:5},{surah:106,start:1,end:4},{surah:107,start:1,end:7},{surah:108,start:1,end:3},{surah:109,start:1,end:6},{surah:110,start:1,end:3},{surah:111,start:1,end:5},{surah:112,start:1,end:4},{surah:113,start:1,end:5},{surah:114,start:1,end:6}]}
+        ];
 
         const surahNames = [
             '', 'الفاتحة', 'البقرة', 'آل عمران', 'النساء', 'المائدة', 'الأنعام', 'الأعراف', 'الأنفال', 'التوبة',
@@ -120,9 +124,7 @@
                 const option = document.createElement('option');
                 option.value = i;
                 option.textContent = `الحزب ${i}`;
-                if (readHizbs.includes(i)) {
-                    option.textContent += ' ✓';
-                }
+                if (readHizbs.includes(i)) option.textContent += ' ✓';
                 select.appendChild(option);
             }
         }
@@ -155,7 +157,8 @@
                 if (isRead) buttons += ` <button class="undo" onclick="unmarkDone(${hizbNum})">إلغاء ✗</button>`;
                 content.innerHTML = text + buttons;
             } catch (e) {
-                content.innerHTML = 'حدث خطأ أثناء التحميل، جرب لاحقًا.';
+                content.innerHTML = 'حدث خطأ، جرب لاحقًا أو تحقق من الإنترنت.';
+                console.error(e);
             }
             document.getElementById('loading').style.display = 'none';
         }
@@ -179,7 +182,7 @@
         }
 
         function resetProgress() {
-            if (confirm('هل أنت متأكد من إعادة تعيين كل التقدم؟')) {
+            if (confirm('هل تريد إعادة تعيين كل التقدم؟')) {
                 readHizbs = [];
                 localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
                 renderHizbSelect();
@@ -188,7 +191,6 @@
             }
         }
 
-        // Initialisation
         renderHizbSelect();
         updateProgress();
     </script>
