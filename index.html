@@ -112,10 +112,12 @@
             const range = hizbRanges[hizbNum - 1];
             let text = '';
             for (const part of range.parts) {
-                const response = await fetch(`https://api.quran.foundation/api/v1/uthmani?chapter_number=${part.surah}&from=${part.start}&to=${part.end}`);
+                const response = await fetch(`https://api.alquran.cloud/v1/surah/${part.surah}/quran-uthmani`);
                 const data = await response.json();
-                for (const verse of data.verses) {
-                    text += verse.text_uthmani + ' ۝ ';
+                const ayahs = data.data.ayahs;
+                for (let a = part.start; a <= part.end; a++) {
+                    const ayah = ayahs.find(ay => ay.numberInSurah === a);
+                    if (ayah) text += ayah.text + ' ۝ ';
                 }
             }
             const content = document.getElementById('content');
