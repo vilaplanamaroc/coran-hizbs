@@ -2,90 +2,95 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>٦٠ حزب من القرآن</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>٦٠ حزب من القرآن الكريم</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html, body { 
             overflow-x: hidden; 
             max-width: 100%; 
-            height: 100%; 
+            min-height: 100vh; 
             background: #f9f5eb; /* beige clair reposant */
             color: #1a1a1a; 
             font-family: 'Amiri', serif; 
+            touch-action: manipulation; /* évite zoom indésirable */
         }
         body { padding: 20px; }
-        #progress { margin-bottom: 25px; text-align: center; }
-        #progress-circle { width: 120px; height: 120px; margin: 0 auto 10px; }
+        #progress { margin-bottom: 25px; text-align: center; font-size: 22px; color: #1e88e5; }
+        #progress-circle { width: 110px; height: 110px; margin: 10px auto; }
         select, input { 
             width: 100%; 
             padding: 14px; 
             font-size: 20px; 
-            border: 1px solid #a1887f; 
+            border: 2px solid #90caf9; 
             border-radius: 12px; 
             background: #fff; 
-            margin-bottom: 15px; 
-            box-shadow: 0 3px 6px rgba(0,0,0,0.08); 
+            margin-bottom: 18px; 
+            box-shadow: 0 3px 8px rgba(30,136,229,0.15); 
         }
+        select option[style*="color"] { font-weight: bold; }
         #content { 
             direction: rtl; 
             white-space: pre-wrap; 
-            line-height: 2; 
-            background: #fffef7; 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
-            transition: font-size 0.4s, opacity 0.5s; 
+            line-height: 2.1; 
+            background: #ffffff; 
+            padding: 28px; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); 
+            transition: all 0.4s ease; 
             opacity: 0; 
+            transform: translateY(10px); 
         }
-        #content.loaded { opacity: 1; }
+        #content.loaded { opacity: 1; transform: translateY(0); }
         .surah-title { 
-            font-size: 28px; 
-            color: #1e88e5; /* bleu luxueux */
+            font-size: 32px; 
+            color: #1565c0; 
             text-align: center; 
-            margin: 30px 0 15px; 
-            border-bottom: 2px solid #bbdefb; 
-            padding-bottom: 10px; 
+            margin: 35px 0 20px; 
+            border-bottom: 3px solid #bbdefb; 
+            padding-bottom: 12px; 
         }
         button { 
-            padding: 14px 28px; 
+            padding: 14px 30px; 
             background: #1e88e5; 
             color: white; 
             border: none; 
             border-radius: 12px; 
-            cursor: pointer; 
             font-size: 18px; 
+            cursor: pointer; 
             transition: all 0.3s; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            margin: 8px 4px; 
+            box-shadow: 0 4px 10px rgba(30,136,229,0.2); 
+            margin: 10px 6px; 
         }
-        button:hover { background: #1565c0; transform: translateY(-3px); box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+        button:hover { background: #1565c0; transform: translateY(-3px); box-shadow: 0 8px 18px rgba(30,136,229,0.3); }
         button.undo { background: #ef5350; }
         button.undo:hover { background: #d32f2f; }
-        button.reset { background: #42a5f5; }
-        #font-size { display: flex; align-items: center; font-size: 18px; margin: 15px 0; }
-        #font-slider { flex: 1; margin-left: 15px; }
-        #favorites, #history { margin-top: 30px; }
-        .favorite { 
+        button.reset { background: #42a5f5; width: 100%; margin-top: 20px; }
+        #font-size { display: flex; align-items: center; font-size: 18px; margin: 20px 0; color: #424242; }
+        #font-slider { flex: 1; margin-right: 15px; accent-color: #1e88e5; }
+        #favorites, #history { margin-top: 35px; }
+        .item { 
             background: #e8f0fe; 
-            padding: 12px; 
-            border-radius: 10px; 
-            margin-bottom: 12px; 
+            padding: 14px; 
+            border-radius: 12px; 
+            margin-bottom: 14px; 
             cursor: pointer; 
-            border-right: 4px solid #1e88e5; 
+            border-right: 5px solid #1e88e5; 
+            transition: background 0.3s; 
         }
-        #loading { text-align: center; margin: 20px; font-size: 18px; color: #757575; font-style: italic; }
-        h3 { color: #1e88e5; margin-bottom: 15px; text-align: center; }
+        .item:hover { background: #bbdefb; }
+        #loading { text-align: center; margin: 30px; font-size: 20px; color: #757575; }
+        h3 { color: #1565c0; margin-bottom: 18px; text-align: center; font-size: 24px; }
     </style>
 </head>
 <body>
     <div id="progress">
         التقدم: <span id="count">٠/٦٠</span> (<span id="percent">٠٪</span>)
         <svg id="progress-circle" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#e3f2fd" stroke-width="10"/>
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#1e88e5" stroke-width="10" stroke-dasharray="283" stroke-dashoffset="283" id="progress-ring"/>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#e3f2fd" stroke-width="12"/>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#1e88e5" stroke-width="12" stroke-dasharray="283" stroke-dashoffset="283" id="progress-ring"/>
         </svg>
     </div>
 
@@ -97,22 +102,22 @@
         <option value="">التنقل حسب السورة</option>
     </select>
 
-    <input type="text" id="search" placeholder="بحث في النص" oninput="searchText(this.value)">
+    <input type="text" id="search" placeholder="ابحث في النص..." oninput="searchText(this.value)">
 
-    <div id="font-size">حجم النص: <input type="range" id="font-slider" min="16" max="32" value="22" oninput="adjustFont(this.value)"></div>
+    <div id="font-size">حجم النص: <input type="range" id="font-slider" min="16" max="36" value="24" oninput="adjustFont(this.value)"></div>
 
-    <div id="loading" style="display:none;">جاري التحميل...</div>
+    <div id="loading" style="display:none;">جاري تحميل الآيات...</div>
 
     <div id="content"></div>
 
-    <button class="reset" onclick="resetProgress()">إعادة تعيين التقدم</button>
+    <button class="reset" onclick="resetProgress()">إعادة تعيين التقدم بالكامل</button>
 
     <div id="favorites"><h3>المفضلة</h3></div>
-    <div id="history"><h3>السجل</h3></div>
+    <div id="history"><h3>السجل الأخير</h3></div>
 
     <script>
-        const hizbRanges = [ /* insérez ici le tableau complet hizbRanges comme avant */ ];
-        const surahNames = [ /* insérez le tableau complet surahNames comme avant */ ];
+        const hizbRanges = [ /* colle ici le tableau complet des hizbRanges que tu avais au début */ ];
+        const surahNames = [ /* colle ici le tableau complet des noms de sourates en arabe */ ];
 
         let readHizbs = JSON.parse(localStorage.getItem('hizbsRead')) || [];
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
@@ -121,58 +126,97 @@
         function updateProgress() {
             const count = readHizbs.length;
             const percent = (count / 60 * 100).toFixed(0);
-            document.getElementById('count').textContent = `${count}/60`;
-            document.getElementById('percent').textContent = `${percent}%`;
+            document.getElementById('count').textContent = count + '/٦٠';
+            document.getElementById('percent').textContent = percent + '٪';
             document.getElementById('progress-ring').style.strokeDashoffset = 283 - (283 * percent / 100);
         }
 
-        function renderSelects() {
-            const hizbSelect = document.getElementById('hizbSelect');
-            hizbSelect.innerHTML = '<option value="">اختر حزبًا</option>';
+        function renderHizbSelect() {
+            const select = document.getElementById('hizbSelect');
+            select.innerHTML = '<option value="">اختر حزبًا</option>';
             for (let i = 1; i <= 60; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `الحزب ${i}`;
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `الحزب ${i}`;
                 if (readHizbs.includes(i)) {
-                    option.style.color = '#2e7d32'; // vert pour les terminés
-                    option.textContent += ' (منتهي)';
+                    opt.style.color = '#2e7d32'; // vert foncé
+                    opt.style.fontWeight = 'bold';
+                    opt.textContent += ' • منتهي';
                 }
-                hizbSelect.appendChild(option);
+                select.appendChild(opt);
             }
+        }
 
-            const surahSelect = document.getElementById('surahSelect');
-            surahSelect.innerHTML = '<option value="">التنقل حسب السورة</option>';
-            surahNames.forEach((name, i) => {
-                if (i > 0) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = name;
-                    surahSelect.appendChild(option);
+        function renderSurahSelect() {
+            const select = document.getElementById('surahSelect');
+            select.innerHTML = '<option value="">التنقل حسب السورة</option>';
+            surahNames.forEach((name, idx) => {
+                if (idx > 0) {
+                    const opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.textContent = name;
+                    select.appendChild(opt);
                 }
             });
         }
 
-        async function loadHizb(hizbNum) {
-            if (!hizbNum) return;
-            // Code fetch et affichage comme avant (simplifié ici pour focus sur fixes)
-            // ... (gardez la logique de chargement du texte)
-            // À la fin :
+        async function loadHizb(num) {
+            if (!num) return;
+            document.getElementById('loading').style.display = 'block';
             const content = document.getElementById('content');
-            content.classList.add('loaded');
-            content.scrollIntoView({behavior: 'smooth'});
+            content.innerHTML = '';
+            content.classList.remove('loaded');
+
+            try {
+                let text = '';
+                let currentSurah = 0;
+                const range = hizbRanges[num - 1];
+                for (const part of range.parts) {
+                    const res = await fetch(`https://api.alquran.cloud/v1/surah/${part.surah}/quran-uthmani`);
+                    const data = await res.json();
+                    if (part.surah !== currentSurah) {
+                        text += `<div class="surah-title">سورة ${surahNames[part.surah]}</div>`;
+                        currentSurah = part.surah;
+                    }
+                    const ayahs = data.data.ayahs;
+                    for (let i = part.start; i <= part.end; i++) {
+                        const ayah = ayahs.find(a => a.numberInSurah === i);
+                        if (ayah) text += ayah.text + ' ۝ ';
+                    }
+                }
+                const isRead = readHizbs.includes(Number(num));
+                let btns = `<br><button onclick="markDone(${num})">منتهي ✓</button>`;
+                if (isRead) btns += ` <button class="undo" onclick="unmarkDone(${num})">إلغاء ✗</button>`;
+                btns += `<br><button onclick="addFavorite('حزب ${num}')">إضافة للمفضلة ★</button>`;
+                content.innerHTML = text + btns;
+                content.classList.add('loaded');
+                content.scrollIntoView({ behavior: 'smooth' });
+                addToHistory(`حزب ${num}`);
+            } catch (e) {
+                content.innerHTML = 'خطأ في التحميل، تحقق من الإنترنت أو حاول لاحقًا.';
+            }
+            document.getElementById('loading').style.display = 'none';
         }
 
-        // Gardez les autres fonctions (markDone, unmarkDone, resetProgress, addFavorite, renderFavorites, etc.)
-        // Adaptez les textes en arabe :
-        // "Terminé" → "منتهي"
-        // "Annuler" → "إلغاء"
-        // "Ajouter aux Favoris" → "إضافة إلى المفضلة"
-        // etc.
+        // Fonctions markDone, unmarkDone, resetProgress, addFavorite, renderFavorites, addToHistory, renderHistory restent similaires
+        // Adapte les textes en arabe et appelle renderHizbSelect() + renderSurahSelect() + updateProgress() au démarrage
+
+        // Exemple resetProgress corrigé
+        function resetProgress() {
+            if (confirm('هل تريد إعادة تعيين كل التقدم؟')) {
+                readHizbs = [];
+                localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
+                renderHizbSelect();
+                updateProgress();
+                document.getElementById('content').innerHTML = '';
+            }
+        }
 
         // Appel initial
-        renderSelects();
+        renderHizbSelect();
+        renderSurahSelect();
         updateProgress();
-        // renderFavorites(); renderHistory(); etc.
+        // Ajoute renderFavorites(); renderHistory(); si tu gardes ces sections
     </script>
 </body>
 </html>
