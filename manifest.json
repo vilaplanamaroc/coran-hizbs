@@ -1,0 +1,11 @@
+{
+  "name": "60 Hizbs du Coran",
+  "short_name": "Hizbs Coran",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#2196f3",
+  "icons": [
+    {"src": "icon.png", "sizes": "192x192", "type": "image/png"}
+  ]
+}
