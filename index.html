@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>60 Hizbs du Coran</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
-        .hizb { background: #f0f0f0; padding: 10px; text-align: center; cursor: pointer; border-radius: 5px; }
-        .hizb.read { background: #90ee90; }
-        #content { margin-top: 20px; direction: rtl; font-size: 18px; white-space: pre-wrap; }
-        #progress { margin-bottom: 20px; }
-        #progress-bar { background: #ddd; height: 20px; }
-        #progress-fill { background: #4caf50; height: 100%; width: 0; }
-        button { margin-top: 10px; padding: 10px; }
+        body { font-family: 'Amiri', serif; margin: 0; padding: 20px; background: #f9f9f9; color: #333; }
+        #progress { margin-bottom: 20px; text-align: center; font-size: 18px; color: #4caf50; }
+        #progress-bar { background: #ddd; height: 20px; border-radius: 10px; overflow: hidden; margin-top: 5px; }
+        #progress-fill { background: linear-gradient(to right, #4caf50, #8bc34a); height: 100%; transition: width 0.3s; }
+        select { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; background: #fff; cursor: pointer; }
+        #content { margin-top: 20px; direction: rtl; font-size: 20px; white-space: pre-wrap; line-height: 1.6; }
+        button { margin-top: 10px; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #45a049; }
+        button.undo { background: #f44336; }
+        button.undo:hover { background: #d32f2f; }
+        button.reset { background: #2196f3; margin-left: 10px; }
+        button.reset:hover { background: #1976d2; }
+        .icon { margin-left: 5px; font-size: 14px; }
     </style>
 </head>
 <body>
     <div id="progress">
-        Progression: <span id="percent">0%</span>
+        Progression: <span id="count">0/60</span> (<span id="percent">0%</span>)
         <div id="progress-bar"><div id="progress-fill"></div></div>
     </div>
-    <div class="grid" id="hizbs"></div>
+    <select id="hizbSelect" onchange="loadHizb(this.value)">
+        <option value="">Sélectionnez un Hizb</option>
+    </select>
     <div id="content"></div>
+    <button class="reset" onclick="resetProgress()">Réinitialiser Progression</button>
 
     <script>
         const hizbRanges = [
@@ -91,24 +99,28 @@
         let readHizbs = JSON.parse(localStorage.getItem('hizbsRead')) || [];
 
         function updateProgress() {
-            const percent = (readHizbs.length / 60 * 100).toFixed(0);
+            const count = readHizbs.length;
+            const percent = (count / 60 * 100).toFixed(0);
+            document.getElementById('count').textContent = `${count}/60`;
             document.getElementById('percent').textContent = `${percent}%`;
             document.getElementById('progress-fill').style.width = `${percent}%`;
         }
 
-        function renderHizbs() {
-            const grid = document.getElementById('hizbs');
-            grid.innerHTML = '';
+        function renderSelect() {
+            const select = document.getElementById('hizbSelect');
+            select.innerHTML = '<option value="">Sélectionnez un Hizb</option>';
             for (let i = 1; i <= 60; i++) {
-                const div = document.createElement('div');
-                div.className = `hizb ${readHizbs.includes(i) ? 'read' : ''}`;
-                div.textContent = `Hizb ${i}`;
-                div.onclick = () => loadHizb(i);
-                grid.appendChild(div);
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Hizb ${i}`;
+                if (readHizbs.includes(i)) option.textContent += ' ✔';
+                select.appendChild(option);
             }
         }
 
         async function loadHizb(hizbNum) {
+            if (!hizbNum) return;
+            const isRead = readHizbs.includes(parseInt(hizbNum));
             const range = hizbRanges[hizbNum - 1];
             let text = '';
             for (const part of range.parts) {
@@ -121,20 +133,41 @@
                 }
             }
             const content = document.getElementById('content');
-            content.innerHTML = text + '<br><button onclick="markDone(' + hizbNum + ')">Terminé</button>';
+            let buttons = '<br><button onclick="markDone(' + hizbNum + ')">Terminé <span class="icon">✔</span></button>';
+            if (isRead) buttons += ' <button class="undo" onclick="unmarkDone(' + hizbNum + ')">Annuler <span class="icon">✖</span></button>';
+            content.innerHTML = text + buttons;
+            content.scrollIntoView({behavior: 'smooth'});
         }
 
         function markDone(hizbNum) {
             if (!readHizbs.includes(hizbNum)) {
                 readHizbs.push(hizbNum);
                 localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
-                renderHizbs();
                 updateProgress();
+                renderSelect();
                 document.getElementById('content').innerHTML = '';
             }
         }
 
-        renderHizbs();
+        function unmarkDone(hizbNum) {
+            readHizbs = readHizbs.filter(h => h !== hizbNum);
+            localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
+            updateProgress();
+            renderSelect();
+            document.getElementById('content').innerHTML = '';
+        }
+
+        function resetProgress() {
+            if (confirm('Réinitialiser toute la progression ?')) {
+                readHizbs = [];
+                localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
+                updateProgress();
+                renderSelect();
+                document.getElementById('content').innerHTML = '';
+            }
+        }
+
+        renderSelect();
         updateProgress();
     </script>
 </body>
