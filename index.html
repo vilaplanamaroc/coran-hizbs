@@ -111,7 +111,7 @@
             const range = hizbRanges[hizbNum - 1];
             let text = '';
             for (const part of range.parts) {
-                const response = await fetch(`http://api.alquran.cloud/v1/surah/${part.surah}/quran-uthmani`);
+                const response = await fetch(`https://api.alquran.cloud/v1/surah/${part.surah}/quran-uthmani`);
                 const data = await response.json();
                 const ayahs = data.data.ayahs;
                 for (let a = part.start; a <= part.end; a++) {
@@ -137,4 +137,5 @@
         updateProgress();
     </script>
 </body>
+
 </html>
