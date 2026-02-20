@@ -1,191 +1,183 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>٦٠ حزب من القرآن الكريم</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕌</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>60 Hizbs du Coran</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body { overflow-x: hidden; max-width: 100%; min-height: 100vh; background: #f9f5eb; color: #1a1a1a; font-family: 'Amiri', serif; touch-action: manipulation; }
-        body { padding: 20px; }
-        #progress { margin-bottom: 25px; text-align: center; font-size: 22px; color: #1565c0; }
-        #progress-circle { width: 110px; height: 110px; margin: 10px auto; }
-        select, input { width: 100%; padding: 14px; font-size: 20px; border: 2px solid #90caf9; border-radius: 12px; background: #fff; margin-bottom: 18px; box-shadow: 0 3px 8px rgba(30,136,229,0.15); }
-        select option[style*="color"] { font-weight: bold; }
-        #content { direction: rtl; white-space: pre-wrap; line-height: 2.1; background: #ffffff; padding: 28px; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); transition: all 0.4s ease; opacity: 0; transform: translateY(10px); }
-        #content.loaded { opacity: 1; transform: translateY(0); }
-        .surah-title { font-size: 32px; color: #1565c0; text-align: center; margin: 35px 0 20px; border-bottom: 3px solid #bbdefb; padding-bottom: 12px; }
-        button { padding: 14px 30px; background: #1565c0; color: white; border: none; border-radius: 12px; font-size: 18px; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 10px rgba(21,101,192,0.2); margin: 10px 6px; }
-        button:hover { background: #0d47a1; transform: translateY(-3px); box-shadow: 0 8px 18px rgba(21,101,192,0.3); }
-        button.undo { background: #ef5350; }
-        button.undo:hover { background: #d32f2f; }
-        button.reset { background: #42a5f5; width: 100%; margin-top: 20px; }
-        #font-size { display: flex; align-items: center; font-size: 18px; margin: 20px 0; color: #424242; }
-        #font-slider { flex: 1; margin-right: 15px; accent-color: #1565c0; }
-        #favorites, #history { margin-top: 35px; }
-        .item { background: #e8f0fe; padding: 14px; border-radius: 12px; margin-bottom: 14px; cursor: pointer; border-right: 5px solid #1565c0; transition: background 0.3s; }
-        .item:hover { background: #bbdefb; }
-        #loading { text-align: center; margin: 30px; font-size: 20px; color: #757575; }
-        h3 { color: #1565c0; margin-bottom: 18px; text-align: center; font-size: 24px; }
+        body { font-family: 'Amiri', serif; margin: 0; padding: 20px; background: linear-gradient(to bottom, #e8f5e9, #c8e6c9); color: #2e7d32; }
+        #progress { margin-bottom: 20px; text-align: center; font-size: 18px; color: #2e7d32; }
+        #progress-bar { background: #c8e6c9; height: 20px; border-radius: 10px; overflow: hidden; margin-top: 5px; border: 1px solid #a5d6a7; }
+        #progress-fill { background: linear-gradient(to right, #4caf50, #66bb6a); height: 100%; transition: width 0.3s; }
+        select { width: 100%; padding: 12px; font-size: 18px; border: 1px solid #81c784; border-radius: 8px; background: #ffffff; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        #content { margin-top: 20px; direction: rtl; font-size: 22px; white-space: pre-wrap; line-height: 1.8; background: #ffffff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .surah-title { font-size: 24px; color: #388e3c; text-align: center; margin: 20px 0 10px; border-bottom: 1px solid #a5d6a7; padding-bottom: 5px; }
+        button { margin-top: 10px; padding: 12px 24px; background: #4caf50; color: white; border: none; border-radius: 8px; cursor: pointer; transition: background 0.3s, transform 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        button:hover { background: #43a047; transform: translateY(-2px); }
+        button.undo { background: #e57373; }
+        button.undo:hover { background: #ef5350; }
+        button.reset { background: #42a5f5; margin-left: 10px; }
+        button.reset:hover { background: #1e88e5; }
+        .icon { margin-left: 5px; font-size: 14px; }
     </style>
 </head>
 <body>
     <div id="progress">
-        التقدم: <span id="count">٠/٦٠</span> (<span id="percent">٠٪</span>)
-        <svg id="progress-circle" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#e3f2fd" stroke-width="12"/>
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#1565c0" stroke-width="12" stroke-dasharray="283" stroke-dashoffset="283" id="progress-ring"/>
-        </svg>
+        Progression: <span id="count">0/60</span> (<span id="percent">0%</span>)
+        <div id="progress-bar"><div id="progress-fill"></div></div>
     </div>
-
     <select id="hizbSelect" onchange="loadHizb(this.value)">
-        <option value="">اختر حزبًا</option>
+        <option value="">Sélectionnez un Hizb</option>
     </select>
-
-    <select id="surahSelect" onchange="loadSurah(this.value)">
-        <option value="">التنقل حسب السورة</option>
-    </select>
-
-    <input type="text" id="search" placeholder="ابحث في النص..." oninput="searchText(this.value)">
-
-    <div id="font-size">حجم النص: <input type="range" id="font-slider" min="16" max="36" value="24" oninput="adjustFont(this.value)"></div>
-
-    <div id="loading" style="display:none;">جاري تحميل الآيات...</div>
-
     <div id="content"></div>
-
-    <button class="reset" onclick="resetProgress()">إعادة تعيين التقدم بالكامل</button>
-
-    <div id="favorites"><h3>المفضلة</h3></div>
-    <div id="history"><h3>السجل الأخير</h3></div>
+    <button class="reset" onclick="resetProgress()">Réinitialiser Progression</button>
 
     <script>
-        // Colle ici tes tableaux complets (hizbRanges et surahNames en arabe)
-        const hizbRanges = [ /* ton tableau original avec 60 entrées */ ];
-        const surahNames = ['','الفاتحة','البقرة','آل عمران','النساء','المائدة','الأنعام','الأعراف','الأنفال','التوبة','يونس','هود','يوسف','الرعد','إبراهيم','الحجر','النحل','الإسراء','الكهف','مريم','طه','الأنبياء','الحج','المؤمنون','النور','الفرقان','الشعراء','النمل','القصص','العنكبوت','الروم','لقمان','السجدة','الأحزاب','سبأ','فاطر','يس','الصافات','ص','الزمر','غافر','فصلت','الشورى','الزخرف','الدخان','الجاثية','الأحقاف','محمد','الفتح','الحجرات','ق','الذاريات','الطور','النجم','القمر','الرحمن','الواقعة','الحديد','المجادلة','الحشر','الممتحنة','الصف','الجمعة','المنافقون','التغابن','الطلاق','التحريم','الملك','القلم','الحاقة','المعارج','نوح','الجن','المزمل','المدثر','القيامة','الإنسان','المرسلات','النبأ','النازعات','عبس','التكوير','الانفطار','المطففين','الانشقاق','البروج','الطارق','الأعلى','الغاشية','الفجر','البلد','الشمس','الليل','الضحى','الشرح','التين','العلق','القدر','البينة','الزلزلة','العاديات','القارعة','التكاثر','العصر','الهمزة','الفيل','قريش','الماعون','الكوثر','الكافرون','النصر','المسد','الإخلاص','الفلق','الناس'];
+        const hizbRanges = [
+            {hizb:1, parts:[{surah:1,start:1,end:7},{surah:2,start:1,end:74}]},
+            {hizb:2, parts:[{surah:2,start:75,end:141}]},
+            {hizb:3, parts:[{surah:2,start:142,end:202}]},
+            {hizb:4, parts:[{surah:2,start:203,end:252}]},
+            {hizb:5, parts:[{surah:2,start:253,end:286},{surah:3,start:1,end:14}]},
+            {hizb:6, parts:[{surah:3,start:15,end:92}]},
+            {hizb:7, parts:[{surah:3,start:93,end:163}]},
+            {hizb:8, parts:[{surah:3,start:164,end:200},{surah:4,start:1,end:23}]},
+            {hizb:9, parts:[{surah:4,start:24,end:87}]},
+            {hizb:10, parts:[{surah:4,start:88,end:147}]},
+            {hizb:11, parts:[{surah:4,start:148,end:176},{surah:5,start:1,end:26}]},
+            {hizb:12, parts:[{surah:5,start:27,end:81}]},
+            {hizb:13, parts:[{surah:5,start:82,end:120},{surah:6,start:1,end:29}]},
+            {hizb:14, parts:[{surah:6,start:30,end:110}]},
+            {hizb:15, parts:[{surah:6,start:111,end:165}]},
+            {hizb:16, parts:[{surah:7,start:1,end:84}]},
+            {hizb:17, parts:[{surah:7,start:85,end:170}]},
+            {hizb:18, parts:[{surah:7,start:171,end:206},{surah:8,start:1,end:40}]},
+            {hizb:19, parts:[{surah:8,start:41,end:75},{surah:9,start:1,end:33}]},
+            {hizb:20, parts:[{surah:9,start:34,end:89}]},
+            {hizb:21, parts:[{surah:9,start:90,end:129},{surah:10,start:1,end:25}]},
+            {hizb:22, parts:[{surah:10,start:26,end:109},{surah:11,start:1,end:5}]},
+            {hizb:23, parts:[{surah:11,start:6,end:83}]},
+            {hizb:24, parts:[{surah:11,start:84,end:123},{surah:12,start:1,end:52}]},
+            {hizb:25, parts:[{surah:12,start:53,end:111},{surah:13,start:1,end:18}]},
+            {hizb:26, parts:[{surah:13,start:19,end:43},{surah:14,start:1,end:52}]},
+            {hizb:27, parts:[{surah:15,start:1,end:99},{surah:16,start:1,end:50}]},
+            {hizb:28, parts:[{surah:16,start:51,end:128}]},
+            {hizb:29, parts:[{surah:17,start:1,end:98}]},
+            {hizb:30, parts:[{surah:17,start:99,end:111},{surah:18,start:1,end:74}]},
+            {hizb:31, parts:[{surah:18,start:75,end:110},{surah:19,start:1,end:98}]},
+            {hizb:32, parts:[{surah:20,start:1,end:135}]},
+            {hizb:33, parts:[{surah:21,start:1,end:112}]},
+            {hizb:34, parts:[{surah:22,start:1,end:78}]},
+            {hizb:35, parts:[{surah:23,start:1,end:118},{surah:24,start:1,end:20}]},
+            {hizb:36, parts:[{surah:24,start:21,end:64},{surah:25,start:1,end:20}]},
+            {hizb:37, parts:[{surah:25,start:21,end:77},{surah:26,start:1,end:110}]},
+            {hizb:38, parts:[{surah:26,start:111,end:227},{surah:27,start:1,end:53}]},
+            {hizb:39, parts:[{surah:27,start:54,end:93},{surah:28,start:1,end:50}]},
+            {hizb:40, parts:[{surah:28,start:51,end:88},{surah:29,start:1,end:45}]},
+            {hizb:41, parts:[{surah:29,start:46,end:69},{surah:30,start:1,end:60},{surah:31,start:1,end:21}]},
+            {hizb:42, parts:[{surah:31,start:22,end:34},{surah:32,start:1,end:30},{surah:33,start:1,end:30}]},
+            {hizb:43, parts:[{surah:33,start:31,end:73},{surah:34,start:1,end:23}]},
+            {hizb:44, parts:[{surah:34,start:24,end:54},{surah:35,start:1,end:45},{surah:36,start:1,end:27}]},
+            {hizb:45, parts:[{surah:36,start:28,end:83},{surah:37,start:1,end:144}]},
+            {hizb:46, parts:[{surah:37,start:145,end:182},{surah:38,start:1,end:88},{surah:39,start:1,end:31}]},
+            {hizb:47, parts:[{surah:39,start:32,end:75},{surah:40,start:1,end:40}]},
+            {hizb:48, parts:[{surah:40,start:41,end:85},{surah:41,start:1,end:46}]},
+            {hizb:49, parts:[{surah:41,start:47,end:54},{surah:42,start:1,end:53},{surah:43,start:1,end:23}]},
+            {hizb:50, parts:[{surah:43,start:24,end:89},{surah:44,start:1,end:59},{surah:45,start:1,end:37}]},
+            {hizb:51, parts:[{surah:46,start:1,end:35},{surah:47,start:1,end:38},{surah:48,start:1,end:17}]},
+            {hizb:52, parts:[{surah:48,start:18,end:29},{surah:49,start:1,end:18},{surah:50,start:1,end:45},{surah:51,start:1,end:30}]},
+            {hizb:53, parts:[{surah:51,start:31,end:60},{surah:52,start:1,end:49},{surah:53,start:1,end:62},{surah:54,start:1,end:55}]},
+            {hizb:54, parts:[{surah:55,start:1,end:78},{surah:56,start:1,end:96},{surah:57,start:1,end:29}]},
+            {hizb:55, parts:[{surah:58,start:1,end:22},{surah:59,start:1,end:24},{surah:60,start:1,end:13},{surah:61,start:1,end:14}]},
+            {hizb:56, parts:[{surah:62,start:1,end:11},{surah:63,start:1,end:11},{surah:64,start:1,end:18},{surah:65,start:1,end:12},{surah:66,start:1,end:12}]},
+            {hizb:57, parts:[{surah:67,start:1,end:30},{surah:68,start:1,end:52},{surah:69,start:1,end:52},{surah:70,start:1,end:44},{surah:71,start:1,end:28}]},
+            {hizb:58, parts:[{surah:72,start:1,end:28},{surah:73,start:1,end:20},{surah:74,start:1,end:56},{surah:75,start:1,end:40},{surah:76,start:1,end:31},{surah:77,start:1,end:50}]},
+            {hizb:59, parts:[{surah:78,start:1,end:40},{surah:79,start:1,end:46},{surah:80,start:1,end:42},{surah:81,start:1,end:29},{surah:82,start:1,end:19},{surah:83,start:1,end:36},{surah:84,start:1,end:25},{surah:85,start:1,end:22},{surah:86,start:1,end:17}]},
+            {hizb:60, parts:[{surah:87,start:1,end:19},{surah:88,start:1,end:26},{surah:89,start:1,end:30},{surah:90,start:1,end:20},{surah:91,start:1,end:15},{surah:92,start:1,end:21},{surah:93,start:1,end:11},{surah:94,start:1,end:8},{surah:95,start:1,end:8},{surah:96,start:1,end:19},{surah:97,start:1,end:5},{surah:98,start:1,end:8},{surah:99,start:1,end:8},{surah:100,start:1,end:11},{surah:101,start:1,end:11},{surah:102,start:1,end:8},{surah:103,start:1,end:3},{surah:104,start:1,end:9},{surah:105,start:1,end:5},{surah:106,start:1,end:4},{surah:107,start:1,end:7},{surah:108,start:1,end:3},{surah:109,start:1,end:6},{surah:110,start:1,end:3},{surah:111,start:1,end:5},{surah:112,start:1,end:4},{surah:113,start:1,end:5},{surah:114,start:1,end:6}]}
+        ];
 
         let readHizbs = JSON.parse(localStorage.getItem('hizbsRead')) || [];
-        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        let history = JSON.parse(localStorage.getItem('history')) || [];
+
+        const surahNames = ['','Al-Fatihah','Al-Baqarah','Ali \'Imran','An-Nisa\'','Al-Ma\'idah','Al-An\'am','Al-A\'raf','Al-Anfal','At-Tawbah','Yunus','Hud','Yusuf','Ar-Ra\'d','Ibrahim','Al-Hijr','An-Nahl','Al-Isra\'','Al-Kahf','Maryam','Taha','Al-Anbiya\'','Al-Hajj','Al-Mu\'minun','An-Nur','Al-Furqan','Ash-Shu\'ara\'','An-Naml','Al-Qasas','Al-\'Ankabut','Ar-Rum','Luqman','As-Sajdah','Al-Ahzab','Saba\'','Fatir','Ya-Sin','As-Saffat','Sad','Az-Zumar','Ghafir','Fussilat','Ash-Shura','Az-Zukhruf','Ad-Dukhan','Al-Jathiyah','Al-Ahqaf','Muhammad','Al-Fath','Al-Hujurat','Qaf','Adh-Dhariyat','At-Tur','An-Najm','Al-Qamar','Ar-Rahman','Al-Waqi\'ah','Al-Hadid','Al-Mujadilah','Al-Hashr','Al-Mumtahanah','As-Saff','Al-Jumu\'ah','Al-Munafiqun','At-Taghabun','At-Talaq','At-Tahrim','Al-Mulk','Al-Qalam','Al-Haqqah','Al-Ma\'arij','Nuh','Al-Jinn','Al-Muzzammil','Al-Muddaththir','Al-Qiyamah','Al-Insan','Al-Mursalat','An-Naba\'','An-Nazi\'at','\'Abasa','At-Takwir','Al-Infitar','Al-Mutaffifin','Al-Inshiqaq','Al-Buruj','At-Tariq','Al-A\'la','Al-Ghashiyah','Al-Fajr','Al-Balad','Ash-Shams','Al-Layl','Ad-Duha','Ash-Sharh','At-Tin','Al-\'Alaq','Al-Qadr','Al-Bayyinah','Az-Zalzalah','Al-\'Adiyat','Al-Qari\'ah','At-Takathur','Al-\'Asr','Al-Humazah','Al-Fil','Quraysh','Al-Ma\'un','Al-Kawthar','Al-Kafirun','An-Nasr','Al-Masad','Al-Ikhlas','Al-Falaq','An-Nas'];
 
         function updateProgress() {
             const count = readHizbs.length;
             const percent = (count / 60 * 100).toFixed(0);
-            document.getElementById('count').textContent = count + '/٦٠';
-            document.getElementById('percent').textContent = percent + '٪';
-            document.getElementById('progress-ring').style.strokeDashoffset = 283 - (283 * percent / 100);
+            document.getElementById('count').textContent = `${count}/60`;
+            document.getElementById('percent').textContent = `${percent}%`;
+            document.getElementById('progress-fill').style.width = `${percent}%`;
         }
 
-        function renderHizbSelect() {
+        function renderSelect() {
             const select = document.getElementById('hizbSelect');
-            select.innerHTML = '<option value="">اختر حزبًا</option>';
+            select.innerHTML = '<option value="">Sélectionnez un Hizb</option>';
             for (let i = 1; i <= 60; i++) {
-                const opt = document.createElement('option');
-                opt.value = i;
-                opt.textContent = `الحزب ${i}`;
-                if (readHizbs.includes(i)) {
-                    opt.style.color = '#2e7d32'; // vert foncé
-                    opt.style.fontWeight = 'bold';
-                    opt.textContent += ' • منتهي';
-                }
-                select.appendChild(opt);
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = `Hizb ${i}`;
+                if (readHizbs.includes(i)) option.textContent += ' ✔';
+                select.appendChild(option);
             }
         }
 
-        function renderSurahSelect() {
-            const select = document.getElementById('surahSelect');
-            select.innerHTML = '<option value="">التنقل حسب السورة</option>';
-            surahNames.forEach((name, idx) => {
-                if (idx > 0) {
-                    const opt = document.createElement('option');
-                    opt.value = idx;
-                    opt.textContent = name;
-                    select.appendChild(opt);
+        async function loadHizb(hizbNum) {
+            if (!hizbNum) return;
+            const isRead = readHizbs.includes(parseInt(hizbNum));
+            const range = hizbRanges[hizbNum - 1];
+            let text = '';
+            let currentSurah = 0;
+            for (const part of range.parts) {
+                if (part.surah !== currentSurah) {
+                    text += `<div class="surah-title">سورة ${surahNames[part.surah]}</div>`;
+                    currentSurah = part.surah;
                 }
-            });
-        }
-
-        async function loadHizb(num) {
-            if (!num) return;
-            const loading = document.getElementById('loading');
+                const response = await fetch(`https://api.alquran.cloud/v1/surah/${part.surah}/quran-uthmani`);
+                const data = await response.json();
+                const ayahs = data.data.ayahs;
+                for (let a = part.start; a <= part.end; a++) {
+                    const ayah = ayahs.find(ay => ay.numberInSurah === a);
+                    if (ayah) text += ayah.text + ' ۝ ';
+                }
+            }
             const content = document.getElementById('content');
-            loading.style.display = 'block';
-            content.innerHTML = '';
-            content.classList.remove('loaded');
-
-            try {
-                let text = '';
-                let currentSurah = 0;
-                const range = hizbRanges[num - 1];
-                for (const part of range.parts) {
-                    const url = `https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=${part.surah}`;
-                    console.log('Fetch: ' + url);
-                    const res = await fetch(url);
-                    if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
-                    const data = await res.json();
-                    if (!data.verses) throw new Error('Pas de versets');
-
-                    if (part.surah !== currentSurah) {
-                        text += `<div class="surah-title">سورة ${surahNames[part.surah]}</div>`;
-                        currentSurah = part.surah;
-                    }
-                    const verses = data.verses;
-                    for (let i = part.start; i <= part.end; i++) {
-                        const verse = verses.find(v => v.verse_number === i);
-                        if (verse && verse.text_uthmani) text += verse.text_uthmani + ' ۝ ';
-                    }
-                }
-
-                const isRead = readHizbs.includes(Number(num));
-                let btns = `<br><button onclick="markDone(${num})">منتهي ✓</button>`;
-                if (isRead) btns += ` <button class="undo" onclick="unmarkDone(${num})">إلغاء ✗</button>`;
-                btns += `<br><button onclick="addFavorite('حزب ${num}')">إضافة للمفضلة ★</button>`;
-
-                content.innerHTML = text + btns;
-                content.classList.add('loaded');
-                content.scrollIntoView({ behavior: 'smooth' });
-                addToHistory(`حزب ${num}`);
-            } catch (err) {
-                console.error('Erreur:', err);
-                content.innerHTML = `خطأ في التحميل: ${err.message}<br>جرب لاحقًا أو تحقق من الإنترنت.`;
-            }
-            loading.style.display = 'none';
+            let buttons = '<br><button onclick="markDone(' + hizbNum + ')">Terminé <span class="icon">✔</span></button>';
+            if (isRead) buttons += ' <button class="undo" onclick="unmarkDone(' + hizbNum + ')">Annuler <span class="icon">✖</span></button>';
+            content.innerHTML = text + buttons;
+            content.scrollIntoView({behavior: 'smooth'});
         }
 
-        // Même logique pour loadSurah (adapte avec api.quran.com si besoin)
-        async function loadSurah(surahNum) {
-            if (!surahNum) return;
-            const loading = document.getElementById('loading');
-            const content = document.getElementById('content');
-            loading.style.display = 'block';
-            content.innerHTML = '';
-            content.classList.remove('loaded');
-
-            try {
-                const url = `https://api.quran.com/api/v4/quran/verses/uthmani?chapter_number=${surahNum}`;
-                const res = await fetch(url);
-                const data = await res.json();
-                let text = `<div class="surah-title">سورة ${surahNames[surahNum]}</div>`;
-                data.verses.forEach(v => text += v.text_uthmani + ' ۝ ');
-                content.innerHTML = text + `<br><button onclick="addFavorite('سورة ${surahNum}')">إضافة للمفضلة ★</button>`;
-                content.classList.add('loaded');
-                content.scrollIntoView({ behavior: 'smooth' });
-                addToHistory(`سورة ${surahNames[surahNum]}`);
-            } catch (err) {
-                content.innerHTML = `خطأ: ${err.message}`;
+        function markDone(hizbNum) {
+            if (!readHizbs.includes(hizbNum)) {
+                readHizbs.push(hizbNum);
+                localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
+                updateProgress();
+                renderSelect();
+                document.getElementById('content').innerHTML = '';
             }
-            loading.style.display = 'none';
         }
 
-        // Fonctions markDone / unmarkDone / resetProgress / addFavorite / renderFavorites / addToHistory / renderHistory restent les mêmes que dans tes versions précédentes, juste traduis les textes (ex: "Terminé" → "منتهي", etc.)
+        function unmarkDone(hizbNum) {
+            readHizbs = readHizbs.filter(h => h !== hizbNum);
+            localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
+            updateProgress();
+            renderSelect();
+            document.getElementById('content').innerHTML = '';
+        }
 
-        // Initialisation
-        renderHizbSelect();
-        renderSurahSelect();
+        function resetProgress() {
+            if (confirm('Réinitialiser toute la progression ?')) {
+                readHizbs = [];
+                localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
+                updateProgress();
+                renderSelect();
+                document.getElementById('content').innerHTML = '';
+            }
+        }
+
+        renderSelect();
         updateProgress();
-        // Ajoute renderFavorites(); renderHistory(); si tu veux
     </script>
 </body>
 </html>
