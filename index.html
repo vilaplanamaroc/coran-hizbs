@@ -34,7 +34,7 @@
             {hizb:6, parts:[{surah:3,start:15,end:92}]},
             {hizb:7, parts:[{surah:3,start:93,end:163}]},
             {hizb:8, parts:[{surah:3,start:164,end:200},{surah:4,start:1,end:23}]},
-            {hizb:9, parts:[{surah:4,start:24,end:87}]}, // Adjusted to match typical, assuming continuity
+            {hizb:9, parts:[{surah:4,start:24,end:87}]},
             {hizb:10, parts:[{surah:4,start:88,end:147}]},
             {hizb:11, parts:[{surah:4,start:148,end:176},{surah:5,start:1,end:26}]},
             {hizb:12, parts:[{surah:5,start:27,end:81}]},
@@ -98,6 +98,7 @@
 
         function renderHizbs() {
             const grid = document.getElementById('hizbs');
+            grid.innerHTML = '';
             for (let i = 1; i <= 60; i++) {
                 const div = document.createElement('div');
                 div.className = `hizb ${readHizbs.includes(i) ? 'read' : ''}`;
@@ -111,12 +112,10 @@
             const range = hizbRanges[hizbNum - 1];
             let text = '';
             for (const part of range.parts) {
-                const response = await fetch(`https://api.alquran.cloud/v1/surah/${part.surah}/quran-uthmani`);
+                const response = await fetch(`https://api.quran.foundation/api/v1/uthmani?chapter_number=${part.surah}&from=${part.start}&to=${part.end}`);
                 const data = await response.json();
-                const ayahs = data.data.ayahs;
-                for (let a = part.start; a <= part.end; a++) {
-                    const ayah = ayahs.find(ay => ay.numberInSurah === a);
-                    if (ayah) text += ayah.text + ' ۝ ';
+                for (const verse of data.verses) {
+                    text += verse.text_uthmani + ' ۝ ';
                 }
             }
             const content = document.getElementById('content');
@@ -127,9 +126,9 @@
             if (!readHizbs.includes(hizbNum)) {
                 readHizbs.push(hizbNum);
                 localStorage.setItem('hizbsRead', JSON.stringify(readHizbs));
-                renderHizbs(); // Refresh
+                renderHizbs();
                 updateProgress();
-                document.getElementById('content').innerHTML = ''; // Clear
+                document.getElementById('content').innerHTML = '';
             }
         }
 
@@ -137,5 +136,4 @@
         updateProgress();
     </script>
 </body>
-
 </html>
